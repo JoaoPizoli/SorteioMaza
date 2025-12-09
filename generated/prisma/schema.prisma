@@ -1,0 +1,52 @@
+generator client {
+  provider   = "prisma-client-js"
+  output     = "../generated/prisma"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  SORTEIO
+  PRESENCA
+  PREMIOS
+}
+
+model Usuario {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  senha    String
+  nome     String
+  role     Role   @default(SORTEIO)
+}
+
+model Sorteio {
+  id            Int          @id @default(autoincrement())
+  ganhador      Funcionarios @relation(fields: [funcionarioId], references: [id])
+  premio        Premios      @relation(fields: [premioId], references: [id])
+  premioId      Int
+  funcionarioId Int
+  entregue      Boolean      @default(false)
+}
+
+model Funcionarios {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  presente  Boolean   @default(false)
+  sorteado  Boolean   @default(false)
+  convidado Boolean   @default(false)
+  sorteios  Sorteio[]
+}
+
+model Premios {
+  id                 Int       @id @default(autoincrement())
+  premio             String
+  quantidade         Int       @default(1)
+  quantidadeSorteada Int       @default(0)
+  ordem              Int       @default(0)
+  sorteado           Boolean   @default(false)
+  sorteios           Sorteio[]
+}

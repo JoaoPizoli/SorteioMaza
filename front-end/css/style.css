@@ -1,0 +1,428 @@
+/* ================================
+   Estilos Gerais
+================================ */
+:root {
+    --primary-color: #dc3545;
+    --primary-dark: #b02a37;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-600: #6c757d;
+    --gray-900: #212529;
+}
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--gray-100);
+    color: var(--gray-900);
+}
+
+main {
+    flex: 1;
+}
+
+/* ================================
+   Navbar Minimalista
+================================ */
+.navbar {
+    background-color: var(--primary-color);
+    padding: 0.75rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.brand-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: #fff;
+}
+
+.navbar-brand:hover .brand-text {
+    opacity: 0.9;
+}
+
+.nav-link {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.2s ease;
+    letter-spacing: 0.5px;
+}
+
+.nav-link:hover {
+    opacity: 0.85;
+}
+
+/* ================================
+   Roleta de Sorteio
+================================ */
+.roleta-container {
+    display: flex;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.roleta-frame {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+}
+
+.roleta-indicator {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color: var(--primary-color);
+    z-index: 10;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateX(-50%) scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.roleta-window {
+    height: 80px;
+    overflow: hidden;
+    border: 3px solid var(--primary-color);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.roleta-names {
+    transition: transform 0.1s linear;
+}
+
+.roleta-name {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.roleta-name.winner {
+    color: var(--primary-color);
+    animation: winnerGlow 0.5s ease infinite alternate;
+}
+
+@keyframes winnerGlow {
+    from {
+        text-shadow: 0 0 5px rgba(220, 53, 69, 0.3);
+    }
+    to {
+        text-shadow: 0 0 15px rgba(220, 53, 69, 0.5);
+    }
+}
+
+/* ================================
+   Botão de Sorteio
+================================ */
+#btnSortear {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.3);
+}
+
+#btnSortear:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(25, 135, 84, 0.4);
+}
+
+#btnSortear:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#btnSortear.sorteando {
+    animation: none;
+}
+
+/* ================================
+   Resultado do Sorteio
+================================ */
+.resultado-sorteio .alert {
+    animation: fadeInUp 0.4s ease;
+    border: none;
+    border-radius: 12px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================================
+   Cards e Tabelas
+================================ */
+.card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 500;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: var(--gray-600);
+    border-bottom-width: 1px;
+}
+
+/* ================================
+   Status Badges
+================================ */
+.badge-presente {
+    background-color: var(--success-color);
+}
+
+.badge-faltou {
+    background-color: var(--danger-color);
+}
+
+.badge-disponivel {
+    background-color: var(--success-color);
+}
+
+.badge-sorteado {
+    background-color: var(--warning-color);
+    color: #000;
+}
+
+/* ================================
+   Botões de Ação
+================================ */
+.btn-presenca {
+    min-width: 130px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+}
+
+.btn-presenca:hover {
+    transform: translateY(-1px);
+}
+
+/* ================================
+   Cards de Prêmios
+================================ */
+.premio-card {
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.premio-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.premio-card.disponivel {
+    border-color: var(--success-color);
+}
+
+.premio-card.sorteado {
+    border-color: var(--warning-color);
+    opacity: 0.75;
+}
+
+.premio-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* ================================
+   Badges
+================================ */
+.badge {
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.3px;
+}
+
+/* ================================
+   Form Controls
+================================ */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+    font-size: 0.95rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.form-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+/* ================================
+   Animações de Loading
+================================ */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* ================================
+   Efeito Confetti (para vitória)
+================================ */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    animation: confettiFall 3s linear forwards;
+    z-index: 9999;
+}
+
+@keyframes confettiFall {
+    to {
+        top: 100vh;
+        transform: rotate(720deg);
+    }
+}
+
+/* ================================
+   Responsividade
+================================ */
+@media (max-width: 768px) {
+    .roleta-name {
+        font-size: 1.3rem;
+    }
+    
+    #btnSortear {
+        font-size: 1.2rem;
+        padding: 1rem 2rem !important;
+    }
+    
+    .display-5 {
+        font-size: 1.8rem;
+    }
+}
+
+/* ================================
+   Animação de entrada
+================================ */
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ================================
+   Hover Effects
+================================ */
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+/* ================================
+   Toast Customizado
+================================ */
+.toast {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    font-size: 0.9rem;
+}
+
+/* ================================
+   Footer Minimalista
+================================ */
+footer {
+    background-color: var(--gray-900) !important;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+footer p {
+    opacity: 0.8;
+}
+
+/* ================================
+   Scroll Customizado
+================================ */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #bb2d3b;
+}

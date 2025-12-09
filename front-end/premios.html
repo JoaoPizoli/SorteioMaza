@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio Maza</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <img src="logo.png" alt="Logo" height="60">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-shuffle me-1"></i>Sorteio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="funcionarios.html">
+                            <i class="bi bi-people me-1"></i>Funcionários
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="premios.html">
+                            <i class="bi bi-trophy me-1"></i>Prêmios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sorteados.html">
+                            <i class="bi bi-award me-1"></i>Sorteados
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <div class="row">
+            <!-- Formulário de Cadastro -->
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white py-3">
+                        <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Cadastrar Prêmio</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="formPremio">
+                            <div class="mb-3">
+                                <label for="nomePremio" class="form-label fw-bold">
+                                    <i class="bi bi-gift me-1"></i>Nome do Prêmio
+                                </label>
+                                <input type="text" class="form-control form-control-lg" id="nomePremio" 
+                                       placeholder="Ex: TV 50 polegadas" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="quantidadePremio" class="form-label fw-bold">
+                                    <i class="bi bi-stack me-1"></i>Quantidade
+                                </label>
+                                <input type="number" class="form-control" id="quantidadePremio" 
+                                       placeholder="1" min="1" value="1">
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="bi bi-plus-lg me-2"></i>Cadastrar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="card shadow mt-4">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <h6 class="text-muted">Total</h6>
+                                <h3 class="text-danger" id="totalPremios">0</h3>
+                            </div>
+                            <div class="col-4">
+                                <h6 class="text-muted">Disponíveis</h6>
+                                <h3 class="text-success" id="premiosDisponiveis">0</h3>
+                            </div>
+                            <div class="col-4">
+                                <h6 class="text-muted">Sorteados</h6>
+                                <h3 class="text-warning" id="premiosSorteados">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Prêmios -->
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center py-3">
+                        <h5 class="mb-0"><i class="bi bi-trophy-fill me-2"></i>Lista de Prêmios</h5>
+                        <span class="badge bg-light text-danger" id="contadorPremios">0 prêmios</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th style="width: 80px;">Ordem</th>
+                                        <th>Prêmio</th>
+                                        <th class="text-center" style="width: 80px;">Qtd</th>
+                                        <th class="text-center" style="width: 120px;">Status</th>
+                                        <th class="text-center" style="width: 120px;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaPremios">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted py-4">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Carregando...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Prêmios Sorteados -->
+                <div class="card shadow mt-4 d-none" id="cardPremiosSorteados">
+                    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center py-3">
+                        <h5 class="mb-0"><i class="bi bi-check-circle-fill me-2"></i>Prêmios Sorteados</h5>
+                        <span class="badge bg-dark text-warning" id="contadorSorteados">0 sorteados</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-secondary">
+                                    <tr>
+                                        <th>Prêmio</th>
+                                        <th class="text-center" style="width: 150px;">Quantidade Sorteada</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabelaPremiosSorteados">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0">Sorteio Maza &copy; 2025</p>
+        </div>
+    </footer>
+
+    <!-- Toast de Notificação -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toastNotificacao" class="toast" role="alert">
+            <div class="toast-header">
+                <i class="bi bi-check-circle-fill text-success me-2" id="toastIcon"></i>
+                <strong class="me-auto">Notificação</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toastMensagem"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/premios.js"></script>
+</body>
+</html>

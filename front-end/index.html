@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio Maza</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <img src="logo.png" alt="Logo" height="60">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">
+                            <i class="bi bi-shuffle me-1"></i>Sorteio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="funcionarios.html">
+                            <i class="bi bi-people me-1"></i>Funcionários
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="premios.html">
+                            <i class="bi bi-trophy me-1"></i>Prêmios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sorteados.html">
+                            <i class="bi bi-award me-1"></i>Sorteados
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-danger text-white text-center py-4">
+                        <h2 class="mb-0"><i class="bi bi-gift-fill me-2"></i>Roleta de Sorteio</h2>
+                    </div>
+                    <div class="card-body p-5">
+                        <!-- Configuração do Sorteio -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold mb-3">
+                                <i class="bi bi-collection me-1"></i>Quantidade de Sorteios:
+                            </label>
+                            <div class="d-flex justify-content-center gap-2 flex-wrap" id="opcoesSorteio">
+                                <button type="button" class="btn btn-outline-danger btn-lg px-4 btn-qtd" data-qtd="1">
+                                    <i class="bi bi-person-fill me-1"></i>1
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-lg px-4 btn-qtd" data-qtd="5">
+                                    <i class="bi bi-person-fill me-1"></i>5
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-lg px-4 btn-qtd active" data-qtd="10">
+                                    <i class="bi bi-person-fill me-1"></i>10
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-lg px-4 btn-qtd" data-qtd="20">
+                                    <i class="bi bi-person-fill me-1"></i>20
+                                </button>
+                            </div>
+                            <div class="text-center mt-3">
+                                <div class="alert alert-info mb-0 py-2 d-inline-block">
+                                    <small><i class="bi bi-info-circle me-1"></i>Os prêmios serão sorteados na ordem cadastrada</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prêmio Atual -->
+                        <div class="text-center mb-3">
+                            <span class="badge bg-warning text-dark fs-5 px-4 py-2" id="premioAtual">
+                                <i class="bi bi-trophy me-1"></i>Aguardando...
+                            </span>
+                        </div>
+
+                        <!-- Progresso dos Sorteios -->
+                        <div class="mb-4 d-none" id="progressoContainer">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Progresso</span>
+                                <span id="progressoTexto">0/5</span>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar bg-success" id="progressoBar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Roleta de Nomes -->
+                        <div class="roleta-container my-5">
+                            <div class="roleta-frame">
+                                <div class="roleta-indicator">
+                                    <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                                <div class="roleta-window">
+                                    <div class="roleta-names" id="roletaNames">
+                                        <div class="roleta-name">AGUARDANDO SORTEIO...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botão de Sorteio -->
+                        <div class="text-center">
+                            <button class="btn btn-success btn-lg px-5 py-3" id="btnSortear">
+                                <i class="bi bi-shuffle me-2"></i>INICIAR SORTEIOS!
+                            </button>
+                        </div>
+
+                        <!-- Resultado do Sorteio -->
+                        <div class="resultado-sorteio d-none mt-5" id="resultadoSorteio">
+                            <div class="alert alert-success text-center py-4">
+                                <h3 class="mb-2"><i class="bi bi-trophy-fill text-warning me-2"></i>PARABÉNS!</h3>
+                                <h2 class="display-5 fw-bold" id="nomeGanhador"></h2>
+                                <p class="mb-0 mt-3">
+                                    <span class="badge bg-primary fs-5" id="premioGanho"></span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Lista de Ganhadores da Rodada -->
+                        <div class="d-none mt-4" id="ganhadoresRodada">
+                            <h5 class="text-center mb-3"><i class="bi bi-stars me-2"></i>Ganhadores desta Rodada</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped">
+                                    <thead class="table-success">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Ganhador</th>
+                                            <th>Prêmio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="listaGanhadoresRodada"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Histórico de Sorteios -->
+                <div class="card shadow mt-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Histórico de Sorteios</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Ganhador</th>
+                                        <th>Prêmio</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historicoSorteios">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">Carregando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0">Sorteio Maza &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/sorteio.js"></script>
+</body>
+</html>
