@@ -89,12 +89,7 @@ function atualizarBotaoPremio() {
     // Calcula total de unidades disponíveis do próximo prêmio
     const premiosDisponiveis = premios.filter(p => !p.sorteado);
     if (premiosDisponiveis.length > 0) {
-        const proximoPremio = premiosDisponiveis[0];
-        const qtdRestante = proximoPremio.quantidade - (proximoPremio.quantidadeSorteada || 0);
-
-        // if (qtdRestante > 1 && ![1, 5, 10, 20].includes(qtdRestante)) {
-        //     // Lógica do botão dinâmico removida conforme solicitação
-        // }
+        // Logica para o proximo premio se necessario no futuro
     }
 
     // Lógica para desabilitar opção 5 se prêmio < 5
@@ -102,6 +97,8 @@ function atualizarBotaoPremio() {
     if (btnCinco && premiosDisponiveis.length > 0) {
         const proximoPremio = premiosDisponiveis[0];
         const qtdRestante = proximoPremio.quantidade - (proximoPremio.quantidadeSorteada || 0);
+
+        console.log(`Prêmio: ${proximoPremio.premio}, Restante: ${qtdRestante}`);
 
         if (qtdRestante < 5) {
             btnCinco.disabled = true;
