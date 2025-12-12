@@ -416,9 +416,9 @@ function animarRoleta(funcionariosDisponiveis, nomeGanhadorReal) {
         const nomes = funcionariosDisponiveis.map(f => f.nome);
         const totalNomes = nomes.length;
 
-        const DURACAO_TOTAL_MS = 3000;
-        const VELOCIDADE_INICIAL = 30;
-        const VELOCIDADE_FINAL = 300;
+        const DURACAO_TOTAL_MS = 2000;
+        const VELOCIDADE_INICIAL = 20; // Mais rápido no começo (era 30)
+        const VELOCIDADE_FINAL = 200;  // Mais rápido no final (era 300)
 
         let rotacaoAtual = 0;
         const tempoInicio = Date.now();
