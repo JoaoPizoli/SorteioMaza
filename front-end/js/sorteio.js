@@ -368,8 +368,19 @@ btnSortear.addEventListener('click', async () => {
     }
 
     // Finaliza
-    progressoBar.style.width = '100%';
-    progressoTexto.textContent = `${sorteiosRealizados}/${sorteiosPossiveis}`;
+    // Finaliza
+    // Atualiza a barra de progresso com o estado ATUAL do prêmio (persistência)
+    const proximoPremioDisp = premios.find(p => !p.sorteado);
+    if (proximoPremioDisp) {
+        const total = proximoPremioDisp.quantidade;
+        const atual = proximoPremioDisp.quantidadeSorteada || 0;
+        const pct = (atual / total) * 100;
+        progressoBar.style.width = `${pct}%`;
+        progressoTexto.textContent = `${atual}/${total}`;
+    } else {
+        progressoBar.style.width = '100%';
+        progressoTexto.textContent = 'Concluído';
+    }
     sorteioRealizado = true;
 
     // Atualiza os dados do servidor
