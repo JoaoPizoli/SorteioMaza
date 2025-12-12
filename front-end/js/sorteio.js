@@ -278,9 +278,11 @@ btnSortear.addEventListener('click', async () => {
         // Sorteia todas as unidades deste prêmio (ou até acabar os sorteios/funcionários)
         for (let j = 0; j < qtdRestanteDoPremio && sorteiosRealizados < sorteiosPossiveis; j++) {
             // Atualiza progresso
-            const progresso = (sorteiosRealizados / sorteiosPossiveis) * 100;
+            // const progresso = (sorteiosRealizados / sorteiosPossiveis) * 100;
+            const progresso = ((j + 1) / qtdRestanteDoPremio) * 100;
             progressoBar.style.width = `${progresso}%`;
-            progressoTexto.textContent = `${sorteiosRealizados}/${sorteiosPossiveis}`;
+            // progressoTexto.textContent = `${sorteiosRealizados}/${sorteiosPossiveis}`;
+            progressoTexto.textContent = `${j + 1}/${qtdRestanteDoPremio}`;
 
             premioAtualEl.innerHTML = `<i class="bi bi-trophy me-1"></i>${premioAtual.premio} (${j + 1}/${qtdRestanteDoPremio})`;
 
