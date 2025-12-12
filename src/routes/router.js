@@ -40,3 +40,5 @@ router.put('/sorteios/:id/entregue', (req, res) => sorteioController.marcarEntre
 // Rotas Admin (Banco de Dados)
 router.post('/admin/sql', (req, res) => adminController.runQuery(req, res))
 router.get('/admin/history', (req, res) => adminController.getHistory(req, res))
+router.get('/admin/notepad', (req, res) => adminController.getNotepad(req, res))
+router.post('/admin/notepad', (req, res) => adminController.saveNotepad(req, res))

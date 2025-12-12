@@ -14,7 +14,46 @@ document.addEventListener('DOMContentLoaded', () => {
             executarQuery();
         }
     });
+
+    // Carregar Notepad ao abrir modal
+    const notepadModal = document.getElementById('notepadModal');
+    notepadModal.addEventListener('show.bs.modal', carregarNotepad);
 });
+
+async function carregarNotepad() {
+    const notepadContent = document.getElementById('notepadContent');
+    const notepadStatus = document.getElementById('notepadStatus');
+
+    notepadStatus.textContent = 'Carregando...';
+    try {
+        const response = await fetch(`${API_URL}/admin/notepad`);
+        const data = await response.json();
+        notepadContent.value = data.content || '';
+        notepadStatus.textContent = '';
+    } catch (error) {
+        console.error("Erro ao carregar notepad:", error);
+        notepadStatus.textContent = 'Erro ao carregar.';
+    }
+}
+
+async function salvarNotepad() {
+    const content = document.getElementById('notepadContent').value;
+    const notepadStatus = document.getElementById('notepadStatus');
+
+    notepadStatus.textContent = 'Salvando...';
+    try {
+        await fetch(`${API_URL}/admin/notepad`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content })
+        });
+        notepadStatus.textContent = 'Salvo com sucesso!';
+        setTimeout(() => notepadStatus.textContent = '', 2000);
+    } catch (error) {
+        console.error("Erro ao salvar notepad:", error);
+        notepadStatus.textContent = 'Erro ao salvar.';
+    }
+}
 
 async function executarQuery() {
     const query = sqlEditor.value.trim();

@@ -86,4 +86,30 @@ export default class AdminController {
             console.error("Erro ao salvar histórico:", error);
         }
     }
+
+    async getNotepad(req, res) {
+        const NOTEPAD_FILE = path.join(__dirname, '../../sql_notepad.json');
+        try {
+            if (!fs.existsSync(NOTEPAD_FILE)) {
+                return res.status(200).json({ content: "" });
+            }
+            const content = fs.readFileSync(NOTEPAD_FILE, 'utf8');
+            return res.status(200).json(JSON.parse(content));
+        } catch (error) {
+            console.error("Erro ao ler bloco de notas:", error);
+            return res.status(500).json({ error: "Erro ao ler bloco de notas." });
+        }
+    }
+
+    async saveNotepad(req, res) {
+        const NOTEPAD_FILE = path.join(__dirname, '../../sql_notepad.json');
+        const { content } = req.body;
+        try {
+            fs.writeFileSync(NOTEPAD_FILE, JSON.stringify({ content }, null, 2));
+            return res.status(200).json({ success: true });
+        } catch (error) {
+            console.error("Erro ao salvar bloco de notas:", error);
+            return res.status(500).json({ error: "Erro ao salvar bloco de notas." });
+        }
+    }
 }
