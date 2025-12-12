@@ -441,7 +441,11 @@ function resetarBotao() {
     btnSortear.innerHTML = '<i class="bi bi-shuffle me-2"></i>INICIAR SORTEIOS!';
 
     // Reabilita botões de quantidade
+    // Reabilita botões de quantidade
     botoesQtd.forEach(btn => btn.disabled = false);
+
+    // Atualiza o estado do botão de 5 de acordo com o próximo prêmio
+    atualizarBotaoPremio();
 }
 
 // ================================
