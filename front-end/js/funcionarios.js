@@ -93,7 +93,7 @@ function renderizarTabela() {
 
     // Filtra por pesquisa
     let funcionariosFiltrados = funcionarios.filter(f =>
-        normalizar(f.nome).startsWith(termoPesquisa)
+        f.nome && normalizar(f.nome.trim()).startsWith(termoPesquisa)
     );
 
     // Filtra por presença
