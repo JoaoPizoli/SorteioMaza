@@ -84,11 +84,16 @@ function atualizarEstatisticas() {
 // Renderizar Tabela
 // ================================
 function renderizarTabela() {
-    const termoPesquisa = searchFuncionario.value.toLowerCase().trim();
+    // Função para normalizar texto (remove acentos e converte para minúsculo)
+    const normalizar = (texto) => {
+        return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    };
+
+    const termoPesquisa = normalizar(searchFuncionario.value.trim());
 
     // Filtra por pesquisa
     let funcionariosFiltrados = funcionarios.filter(f =>
-        f.nome.toLowerCase().startsWith(termoPesquisa)
+        normalizar(f.nome).startsWith(termoPesquisa)
     );
 
     // Filtra por presença
