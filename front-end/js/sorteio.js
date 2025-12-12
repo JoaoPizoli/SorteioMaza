@@ -1,5 +1,5 @@
 
-const API_URL = 'https://192.168.20.17:4001/api';
+const API_URL = 'https://sorteio.maza.com.br/api';
 
 // Elementos DOM
 const botoesQtd = document.querySelectorAll('.btn-qtd');
