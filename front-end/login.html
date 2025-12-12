@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
@@ -19,7 +21,7 @@
             justify-content: center;
             background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
         }
-        
+
         .login-card {
             width: 100%;
             max-width: 420px;
@@ -27,39 +29,39 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
-        
+
         .login-header {
             background: #fff;
             padding: 2rem;
             text-align: center;
             border-bottom: 1px solid #eee;
         }
-        
+
         .login-header img {
             max-width: 120px;
             margin-bottom: 1rem;
         }
-        
+
         .login-header h2 {
             color: #dc3545;
             font-weight: 700;
             margin: 0;
         }
-        
+
         .login-body {
             background: #fff;
             padding: 2rem;
         }
-        
-        .form-floating > .form-control {
+
+        .form-floating>.form-control {
             border-radius: 8px;
         }
-        
-        .form-floating > .form-control:focus {
+
+        .form-floating>.form-control:focus {
             border-color: #dc3545;
             box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
         }
-        
+
         .btn-login {
             background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
             border: none;
@@ -70,17 +72,18 @@
             letter-spacing: 1px;
             transition: all 0.3s ease;
         }
-        
+
         .btn-login:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
         }
-        
+
         .alert {
             border-radius: 8px;
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="login-card">
@@ -98,9 +101,9 @@
                         <input type="password" class="form-control" id="senha" placeholder="Senha" required>
                         <label for="senha"><i class="bi bi-lock me-2"></i>Senha</label>
                     </div>
-                    
+
                     <div id="alertContainer"></div>
-                    
+
                     <div class="d-grid">
                         <button type="submit" class="btn btn-danger btn-login">
                             <i class="bi bi-box-arrow-in-right me-2"></i>ENTRAR
@@ -113,7 +116,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const API_URL = window.location.origin + '/api';
+        const API_URL = 'http://localhost:4001/api';
 
         // Verificar se já está logado
         document.addEventListener('DOMContentLoaded', () => {
@@ -126,26 +129,26 @@
         // Form de login
         document.getElementById('formLogin').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const username = document.getElementById('username').value;
             const senha = document.getElementById('senha').value;
             const alertContainer = document.getElementById('alertContainer');
-            
+
             alertContainer.innerHTML = '';
-            
+
             try {
                 const response = await fetch(`${API_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, senha })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     // Salvar usuário no localStorage
                     localStorage.setItem('usuario', JSON.stringify(data.usuario));
-                    
+
                     // Redirecionar baseado na role
                     redirecionarPorRole(data.usuario.role);
                 } else {
@@ -168,7 +171,7 @@
         });
 
         function redirecionarPorRole(role) {
-            switch(role) {
+            switch (role) {
                 case 'ADMIN':
                     window.location.href = 'index.html';
                     break;
@@ -187,4 +190,5 @@
         }
     </script>
 </body>
+
 </html>

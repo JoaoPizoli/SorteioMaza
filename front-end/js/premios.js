@@ -1,4 +1,4 @@
-const API_URL = '/api';
+const API_URL = 'http://localhost:4001/api';
 
 // Elementos DOM
 const formPremio = document.getElementById('formPremio');
@@ -41,7 +41,7 @@ async function carregarPremios() {
     try {
         const response = await fetch(`${API_URL}/premios`);
         premios = await response.json();
-        
+
         atualizarEstatisticas();
         renderizarTabela();
     } catch (error) {
@@ -63,13 +63,13 @@ async function carregarPremios() {
 function atualizarEstatisticas() {
     // Total de prêmios distintos
     const total = premios.length;
-    
+
     // Prêmios disponíveis (que ainda não foram completamente sorteados)
     const disponiveis = premios.filter(p => !p.sorteado).length;
-    
+
     // Prêmios sorteados
     const sorteados = premios.filter(p => p.sorteado).length;
-    
+
     totalPremios.textContent = total;
     premiosDisponiveis.textContent = disponiveis;
     premiosSorteadosEl.textContent = sorteados;
@@ -83,7 +83,7 @@ function renderizarTabela() {
     // Separa prêmios não sorteados (para ordenação) e sorteados (apenas listados)
     const premiosNaoSorteados = premios.filter(p => !p.sorteado);
     const premiosSorteados = premios.filter(p => p.sorteado);
-    
+
     if (premiosNaoSorteados.length === 0) {
         tabelaPremios.innerHTML = `
             <tr>
@@ -148,7 +148,7 @@ function renderizarTabela() {
             </tr>
         `}).join('');
     }
-    
+
     // Renderiza tabela de prêmios sorteados (se houver)
     renderizarTabelaSorteados(premiosSorteados);
 }
@@ -161,10 +161,10 @@ function renderizarTabelaSorteados(premiosSorteados) {
         cardPremiosSorteados.classList.add('d-none');
         return;
     }
-    
+
     cardPremiosSorteados.classList.remove('d-none');
     contadorSorteados.textContent = `${premiosSorteados.length} sorteado${premiosSorteados.length !== 1 ? 's' : ''}`;
-    
+
     tabelaPremiosSorteados.innerHTML = premiosSorteados.map(premio => `
         <tr class="fade-in">
             <td>
@@ -186,12 +186,12 @@ function renderizarTabelaSorteados(premiosSorteados) {
 async function cadastrarPremio() {
     const premio = nomePremio.value.trim();
     const quantidade = parseInt(quantidadePremio.value) || 1;
-    
+
     if (!premio) {
         mostrarToast('Por favor, informe o nome do prêmio', 'warning');
         return;
     }
-    
+
     try {
         const response = await fetch(`${API_URL}/premios`, {
             method: 'POST',
@@ -200,28 +200,28 @@ async function cadastrarPremio() {
             },
             body: JSON.stringify({ premio, quantidade })
         });
-        
+
         if (!response.ok) {
             throw new Error('Erro ao cadastrar prêmio');
         }
-        
+
         const novoPremio = await response.json();
-        
+
         // Adiciona o novo prêmio à lista
         premios.push(novoPremio);
-        
+
         // Atualiza a interface
         atualizarEstatisticas();
         renderizarTabela();
-        
+
         // Limpa o formulário
         formPremio.reset();
         quantidadePremio.value = 1;
         nomePremio.focus();
-        
+
         // Mostra notificação
         mostrarToast(`Prêmio "${novoPremio.premio}" cadastrado com sucesso!`, 'success');
-        
+
     } catch (error) {
         console.error('Erro ao cadastrar prêmio:', error);
         mostrarToast('Erro ao cadastrar prêmio', 'danger');
@@ -235,16 +235,15 @@ function mostrarToast(mensagem, tipo = 'success') {
     const toastEl = document.getElementById('toastNotificacao');
     const toastMensagem = document.getElementById('toastMensagem');
     const toastIcon = document.getElementById('toastIcon');
-    
+
     // Atualiza o ícone baseado no tipo
-    toastIcon.className = `bi me-2 ${
-        tipo === 'success' ? 'bi-check-circle-fill text-success' :
-        tipo === 'warning' ? 'bi-exclamation-triangle-fill text-warning' :
-        'bi-x-circle-fill text-danger'
-    }`;
-    
+    toastIcon.className = `bi me-2 ${tipo === 'success' ? 'bi-check-circle-fill text-success' :
+            tipo === 'warning' ? 'bi-exclamation-triangle-fill text-warning' :
+                'bi-x-circle-fill text-danger'
+        }`;
+
     toastMensagem.textContent = mensagem;
-    
+
     const toast = new bootstrap.Toast(toastEl);
     toast.show();
 }
@@ -257,17 +256,17 @@ async function moverPremio(premioId, direcao) {
     const premiosNaoSorteados = premios.filter(p => !p.sorteado);
     const index = premiosNaoSorteados.findIndex(p => p.id === premioId);
     if (index === -1) return;
-    
+
     const novoIndex = direcao === 'up' ? index - 1 : index + 1;
     if (novoIndex < 0 || novoIndex >= premiosNaoSorteados.length) return;
-    
+
     // Troca as posições no array de não sorteados
     [premiosNaoSorteados[index], premiosNaoSorteados[novoIndex]] = [premiosNaoSorteados[novoIndex], premiosNaoSorteados[index]];
-    
+
     // Reconstroi o array de premios mantendo os sorteados no final
     const premiosSorteados = premios.filter(p => p.sorteado);
     premios = [...premiosNaoSorteados, ...premiosSorteados];
-    
+
     await salvarOrdem();
 }
 
@@ -279,14 +278,14 @@ async function moverParaTopo(premioId) {
     const premiosNaoSorteados = premios.filter(p => !p.sorteado);
     const index = premiosNaoSorteados.findIndex(p => p.id === premioId);
     if (index <= 0) return;
-    
+
     const premio = premiosNaoSorteados.splice(index, 1)[0];
     premiosNaoSorteados.unshift(premio);
-    
+
     // Reconstroi o array de premios mantendo os sorteados no final
     const premiosSorteados = premios.filter(p => p.sorteado);
     premios = [...premiosNaoSorteados, ...premiosSorteados];
-    
+
     await salvarOrdem();
 }
 
@@ -298,14 +297,14 @@ async function moverParaFim(premioId) {
     const premiosNaoSorteados = premios.filter(p => !p.sorteado);
     const index = premiosNaoSorteados.findIndex(p => p.id === premioId);
     if (index === -1 || index === premiosNaoSorteados.length - 1) return;
-    
+
     const premio = premiosNaoSorteados.splice(index, 1)[0];
     premiosNaoSorteados.push(premio);
-    
+
     // Reconstroi o array de premios mantendo os sorteados no final
     const premiosSorteados = premios.filter(p => p.sorteado);
     premios = [...premiosNaoSorteados, ...premiosSorteados];
-    
+
     await salvarOrdem();
 }
 
@@ -318,7 +317,7 @@ async function salvarOrdem() {
             id: p.id,
             ordem: index
         }));
-        
+
         const response = await fetch(`${API_URL}/premios/reordenar`, {
             method: 'PUT',
             headers: {
@@ -326,14 +325,14 @@ async function salvarOrdem() {
             },
             body: JSON.stringify({ premios: premiosOrdenados })
         });
-        
+
         if (!response.ok) {
             throw new Error('Erro ao salvar ordem');
         }
-        
+
         // Atualiza a interface
         renderizarTabela();
-        
+
     } catch (error) {
         console.error('Erro ao salvar ordem:', error);
         mostrarToast('Erro ao salvar ordem dos prêmios', 'danger');
@@ -349,26 +348,26 @@ async function excluirPremio(premioId, nomePremio) {
     if (!confirm(`Tem certeza que deseja excluir o prêmio "${nomePremio}"?`)) {
         return;
     }
-    
+
     try {
         const response = await fetch(`${API_URL}/premios/${premioId}`, {
             method: 'DELETE'
         });
-        
+
         if (!response.ok) {
             const data = await response.json();
             throw new Error(data.error || 'Erro ao excluir prêmio');
         }
-        
+
         // Remove da lista local
         premios = premios.filter(p => p.id !== premioId);
-        
+
         // Atualiza a interface
         atualizarEstatisticas();
         renderizarTabela();
-        
+
         mostrarToast(`Prêmio "${nomePremio}" excluído com sucesso!`, 'success');
-        
+
     } catch (error) {
         console.error('Erro ao excluir prêmio:', error);
         mostrarToast(error.message || 'Erro ao excluir prêmio', 'danger');

@@ -1,5 +1,5 @@
 
-const API_URL = '/api';
+const API_URL = 'http://localhost:4001/api';
 
 // Elementos DOM
 const botoesQtd = document.querySelectorAll('.btn-qtd');
@@ -22,7 +22,7 @@ let premios = [];
 let sorteando = false;
 let sorteioRealizado = false;
 let ganhadoresDaRodada = [];
-let qtdSorteiosSelecionada = 10; // Valor padrão
+let qtdSorteiosSelecionada = 1; // Valor padrão
 
 // ================================
 // Função para gerar índice aleatório criptograficamente seguro
@@ -31,11 +31,11 @@ let qtdSorteiosSelecionada = 10; // Valor padrão
 function getRandomIndex(max) {
     const randomBuffer = new Uint32Array(1);
     const limit = Math.floor(0xFFFFFFFF / max) * max;
-    
+
     do {
         crypto.getRandomValues(randomBuffer);
     } while (randomBuffer[0] >= limit);
-    
+
     return randomBuffer[0] % max;
 }
 
@@ -57,17 +57,17 @@ function configurarBotoesQuantidade() {
     botoesAtuais.forEach(btn => {
         btn.addEventListener('click', () => {
             if (sorteando) return; // Não permite mudar durante sorteio
-            
+
             // Remove active de todos
             document.querySelectorAll('.btn-qtd').forEach(b => {
                 b.classList.remove('active', 'btn-danger');
                 b.classList.add('btn-outline-danger');
             });
-            
+
             // Adiciona active no clicado
             btn.classList.remove('btn-outline-danger');
             btn.classList.add('active', 'btn-danger');
-            
+
             // Atualiza quantidade selecionada
             qtdSorteiosSelecionada = parseInt(btn.dataset.qtd);
         });
@@ -80,44 +80,47 @@ function configurarBotoesQuantidade() {
 function atualizarBotaoPremio() {
     const container = document.getElementById('opcoesSorteio');
     const btnPremioExistente = document.getElementById('btnQtdPremio');
-    
+
     // Remove botão antigo se existir
     if (btnPremioExistente) {
         btnPremioExistente.remove();
     }
-    
+
     // Calcula total de unidades disponíveis do próximo prêmio
     const premiosDisponiveis = premios.filter(p => !p.sorteado);
     if (premiosDisponiveis.length > 0) {
         const proximoPremio = premiosDisponiveis[0];
         const qtdRestante = proximoPremio.quantidade - (proximoPremio.quantidadeSorteada || 0);
-        
-        if (qtdRestante > 1 && ![1, 5, 10, 20].includes(qtdRestante)) {
-            // Cria novo botão com a quantidade do prêmio
-            const btnPremio = document.createElement('button');
-            btnPremio.type = 'button';
-            btnPremio.id = 'btnQtdPremio';
-            btnPremio.className = 'btn btn-outline-success btn-lg px-4 btn-qtd';
-            btnPremio.dataset.qtd = qtdRestante;
-            btnPremio.innerHTML = `<i class="bi bi-gift-fill me-1"></i>${qtdRestante}`;
-            btnPremio.title = `Sortear todas as ${qtdRestante} unidades de "${proximoPremio.premio}"`;
-            
-            // Adiciona evento de click
-            btnPremio.addEventListener('click', () => {
-                if (sorteando) return;
-                
-                document.querySelectorAll('.btn-qtd').forEach(b => {
-                    b.classList.remove('active', 'btn-danger', 'btn-success');
-                    b.classList.add('btn-outline-danger');
-                });
-                
-                btnPremio.classList.remove('btn-outline-danger', 'btn-outline-success');
-                btnPremio.classList.add('active', 'btn-success');
-                
-                qtdSorteiosSelecionada = qtdRestante;
-            });
-            
-            container.appendChild(btnPremio);
+
+        // if (qtdRestante > 1 && ![1, 5, 10, 20].includes(qtdRestante)) {
+        //     // Lógica do botão dinâmico removida conforme solicitação
+        // }
+    }
+
+    // Lógica para desabilitar opção 5 se prêmio < 5
+    const btnCinco = document.querySelector('.btn-qtd[data-qtd="5"]');
+    if (btnCinco && premiosDisponiveis.length > 0) {
+        const proximoPremio = premiosDisponiveis[0];
+        const qtdRestante = proximoPremio.quantidade - (proximoPremio.quantidadeSorteada || 0);
+
+        if (qtdRestante < 5) {
+            btnCinco.disabled = true;
+            btnCinco.title = "Quantidade disponível menor que 5";
+
+            // Se estava selecionado, volta para 1
+            if (btnCinco.classList.contains('active')) {
+                const btnUm = document.querySelector('.btn-qtd[data-qtd="1"]');
+                if (btnUm) {
+                    btnCinco.classList.remove('active', 'btn-danger');
+                    btnCinco.classList.add('btn-outline-danger');
+                    btnUm.classList.add('active', 'btn-danger');
+                    btnUm.classList.remove('btn-outline-danger');
+                    qtdSorteiosSelecionada = 1;
+                }
+            }
+        } else {
+            btnCinco.disabled = false;
+            btnCinco.title = "";
         }
     }
 }
@@ -129,16 +132,16 @@ async function carregarPremios() {
     try {
         const response = await fetch(`${API_URL}/premios`);
         premios = await response.json();
-        
+
         const premiosDisponiveis = premios.filter(p => !p.sorteado);
-        
+
         if (premiosDisponiveis.length === 0) {
             premioAtualEl.innerHTML = '<i class="bi bi-x-circle me-1"></i>Nenhum prêmio disponível';
             btnSortear.disabled = true;
         } else {
             premioAtualEl.innerHTML = `<i class="bi bi-trophy me-1"></i>${premiosDisponiveis[0].premio}`;
             btnSortear.disabled = false;
-            
+
             // Atualiza botão com quantidade do prêmio
             atualizarBotaoPremio();
         }
@@ -155,7 +158,7 @@ async function carregarFuncionarios(atualizarVisualRoleta = true) {
     try {
         const response = await fetch(`${API_URL}/funcionarios`);
         funcionarios = await response.json();
-        
+
         // Só atualiza a roleta visualmente se não houver um sorteio realizado
         // e se for permitido atualizar - sempre mostra "SORTEIE" como placeholder
         if (atualizarVisualRoleta && !sorteioRealizado) {
@@ -173,7 +176,7 @@ async function carregarHistorico() {
     try {
         const response = await fetch(`${API_URL}/sorteios`);
         const sorteios = await response.json();
-        
+
         if (sorteios.length === 0) {
             historicoSorteios.innerHTML = `
                 <tr>
@@ -216,143 +219,143 @@ async function carregarHistorico() {
 // ================================
 btnSortear.addEventListener('click', async () => {
     if (sorteando) return;
-    
+
     const qtdSorteios = qtdSorteiosSelecionada;
-    
+
     // Pega prêmios disponíveis (ordenados) - prêmios que ainda têm unidades para sortear
     const premiosDisponiveis = premios.filter(p => !p.sorteado);
-    
+
     if (premiosDisponiveis.length === 0) {
         alert('Nenhum prêmio disponível para sorteio!');
         return;
     }
-    
+
     // Pega funcionários disponíveis
     let funcionariosDisponiveis = funcionarios.filter(f => f.presente && !f.sorteado && !f.convidado);
-    
+
     if (funcionariosDisponiveis.length === 0) {
         alert('Nenhum funcionário disponível para sorteio!');
         return;
     }
-    
+
     // Calcula total de unidades disponíveis para sortear (soma das quantidades restantes)
     let totalUnidadesDisponiveis = 0;
     for (const premio of premiosDisponiveis) {
         const qtdRestante = premio.quantidade - (premio.quantidadeSorteada || 0);
         totalUnidadesDisponiveis += qtdRestante;
     }
-    
+
     // Calcula quantos sorteios podemos fazer
     const sorteiosPossiveis = Math.min(qtdSorteios, totalUnidadesDisponiveis, funcionariosDisponiveis.length);
-    
+
     if (sorteiosPossiveis === 0) {
         alert('Não há prêmios ou funcionários suficientes para sortear!');
         return;
     }
-    
+
     // Inicia os sorteios
     sorteando = true;
     sorteioRealizado = false;
     ganhadoresDaRodada = [];
-    
+
     btnSortear.disabled = true;
     btnSortear.classList.add('sorteando');
     btnSortear.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>SORTEANDO...';
-    
+
     // Desabilita botões de quantidade
     botoesQtd.forEach(btn => btn.disabled = true);
-    
+
     // Mostra barra de progresso
     progressoContainer.classList.remove('d-none');
     ganhadoresRodada.classList.add('d-none');
     resultadoSorteio.classList.add('d-none');
-    
+
     // Executa os sorteios em sequência
     let sorteiosRealizados = 0;
     let indicePremioAtual = 0;
-    
+
     while (sorteiosRealizados < sorteiosPossiveis && indicePremioAtual < premiosDisponiveis.length) {
         const premioAtual = premiosDisponiveis[indicePremioAtual];
         const qtdRestanteDoPremio = premioAtual.quantidade - (premioAtual.quantidadeSorteada || 0);
-        
+
         // Sorteia todas as unidades deste prêmio (ou até acabar os sorteios/funcionários)
         for (let j = 0; j < qtdRestanteDoPremio && sorteiosRealizados < sorteiosPossiveis; j++) {
             // Atualiza progresso
             const progresso = (sorteiosRealizados / sorteiosPossiveis) * 100;
             progressoBar.style.width = `${progresso}%`;
             progressoTexto.textContent = `${sorteiosRealizados}/${sorteiosPossiveis}`;
-            
+
             premioAtualEl.innerHTML = `<i class="bi bi-trophy me-1"></i>${premioAtual.premio} (${j + 1}/${qtdRestanteDoPremio})`;
-            
+
             // Atualiza lista de funcionários disponíveis (exclui os já sorteados nesta rodada)
-            funcionariosDisponiveis = funcionarios.filter(f => 
-                f.presente && !f.sorteado && !f.convidado && 
+            funcionariosDisponiveis = funcionarios.filter(f =>
+                f.presente && !f.sorteado && !f.convidado &&
                 !ganhadoresDaRodada.find(g => g.funcionarioId === f.id)
             );
-            
+
             if (funcionariosDisponiveis.length === 0) {
                 alert('Acabaram os funcionários disponíveis!');
                 indicePremioAtual = premiosDisponiveis.length; // Sair do while também
                 break;
             }
-            
+
             // Sorteia um funcionário usando crypto.getRandomValues() para aleatoriedade criptograficamente segura
             const indiceAleatorio = getRandomIndex(funcionariosDisponiveis.length);
             const funcionarioSorteado = funcionariosDisponiveis[indiceAleatorio];
-            
+
             try {
                 // Anima a roleta
                 await animarRoleta(funcionariosDisponiveis, funcionarioSorteado.nome);
-                
+
                 // Mostra o resultado
                 roletaNames.innerHTML = `<div class="roleta-name winner">${funcionarioSorteado.nome}</div>`;
                 nomeGanhador.textContent = funcionarioSorteado.nome;
                 premioGanho.textContent = premioAtual.premio;
                 resultadoSorteio.classList.remove('d-none');
-                
+
                 // Efeito de confetti
                 criarConfetti();
-                
+
                 // Registra no backend
                 const response = await fetch(`${API_URL}/sorteio`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ premioId: premioAtual.id, funcionarioId: funcionarioSorteado.id })
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Erro ao registrar sorteio');
                 }
-                
+
                 // Adiciona à lista de ganhadores da rodada
                 ganhadoresDaRodada.push({
                     funcionarioId: funcionarioSorteado.id,
                     nome: funcionarioSorteado.nome,
                     premio: premioAtual.premio
                 });
-                
+
                 // Atualiza a lista de ganhadores da rodada na tela
                 atualizarListaGanhadoresRodada();
-                
+
                 // Incrementa a quantidade sorteada localmente
                 premioAtual.quantidadeSorteada = (premioAtual.quantidadeSorteada || 0) + 1;
                 if (premioAtual.quantidadeSorteada >= premioAtual.quantidade) {
                     premioAtual.sorteado = true;
                 }
-                
+
                 // Marca funcionário como sorteado localmente
                 const funcIndex = funcionarios.findIndex(f => f.id === funcionarioSorteado.id);
                 if (funcIndex !== -1) {
                     funcionarios[funcIndex].sorteado = true;
                 }
-                
+
                 sorteiosRealizados++;
-                
+
                 // Pausa entre sorteios (exceto no último)
                 if (sorteiosRealizados < sorteiosPossiveis) {
                     await new Promise(resolve => setTimeout(resolve, 2000));
                 }
-                
+
             } catch (error) {
                 console.error('Erro ao sortear:', error);
                 alert(`Erro ao registrar sorteio: ${error.message}`);
@@ -360,21 +363,21 @@ btnSortear.addEventListener('click', async () => {
                 break;
             }
         }
-        
+
         // Passa para o próximo prêmio
         indicePremioAtual++;
     }
-    
+
     // Finaliza
     progressoBar.style.width = '100%';
     progressoTexto.textContent = `${sorteiosRealizados}/${sorteiosPossiveis}`;
     sorteioRealizado = true;
-    
+
     // Atualiza os dados do servidor
     await carregarPremios();
     await carregarFuncionarios(false);
     await carregarHistorico();
-    
+
     resetarBotao();
 });
 
@@ -399,21 +402,21 @@ function animarRoleta(funcionariosDisponiveis, nomeGanhadorReal) {
     return new Promise(resolve => {
         const nomes = funcionariosDisponiveis.map(f => f.nome);
         const totalNomes = nomes.length;
-        
+
         const DURACAO_TOTAL_MS = 3000;
         const VELOCIDADE_INICIAL = 30;
         const VELOCIDADE_FINAL = 300;
-        
+
         let rotacaoAtual = 0;
         const tempoInicio = Date.now();
-        
+
         function girar() {
             const indiceAtual = rotacaoAtual % totalNomes;
             roletaNames.innerHTML = `<div class="roleta-name">${nomes[indiceAtual]}</div>`;
-            
+
             const tempoDecorrido = Date.now() - tempoInicio;
             const progresso = Math.min(tempoDecorrido / DURACAO_TOTAL_MS, 1);
-            
+
             if (tempoDecorrido < DURACAO_TOTAL_MS) {
                 rotacaoAtual++;
                 const velocidade = VELOCIDADE_INICIAL + (progresso * progresso * (VELOCIDADE_FINAL - VELOCIDADE_INICIAL));
@@ -423,7 +426,7 @@ function animarRoleta(funcionariosDisponiveis, nomeGanhadorReal) {
                 resolve();
             }
         }
-        
+
         girar();
     });
 }
@@ -436,7 +439,7 @@ function resetarBotao() {
     btnSortear.disabled = false;
     btnSortear.classList.remove('sorteando');
     btnSortear.innerHTML = '<i class="bi bi-shuffle me-2"></i>INICIAR SORTEIOS!';
-    
+
     // Reabilita botões de quantidade
     botoesQtd.forEach(btn => btn.disabled = false);
 }
@@ -446,7 +449,7 @@ function resetarBotao() {
 // ================================
 function criarConfetti() {
     const cores = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500'];
-    
+
     for (let i = 0; i < 50; i++) {
         setTimeout(() => {
             const confetti = document.createElement('div');
@@ -456,7 +459,7 @@ function criarConfetti() {
             confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
             confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
             document.body.appendChild(confetti);
-            
+
             setTimeout(() => confetti.remove(), 5000);
         }, i * 50);
     }

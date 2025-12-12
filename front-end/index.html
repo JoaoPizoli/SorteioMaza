@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,13 @@
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -64,22 +67,18 @@
                                 <i class="bi bi-collection me-1"></i>Quantidade de Sorteios:
                             </label>
                             <div class="d-flex justify-content-center gap-2 flex-wrap" id="opcoesSorteio">
-                                <button type="button" class="btn btn-outline-danger btn-lg px-4 btn-qtd" data-qtd="1">
+                                <button type="button" class="btn btn-outline-danger btn-lg px-4 btn-qtd active"
+                                    data-qtd="1">
                                     <i class="bi bi-person-fill me-1"></i>1
                                 </button>
                                 <button type="button" class="btn btn-outline-danger btn-lg px-4 btn-qtd" data-qtd="5">
                                     <i class="bi bi-person-fill me-1"></i>5
                                 </button>
-                                <button type="button" class="btn btn-outline-danger btn-lg px-4 btn-qtd active" data-qtd="10">
-                                    <i class="bi bi-person-fill me-1"></i>10
-                                </button>
-                                <button type="button" class="btn btn-outline-danger btn-lg px-4 btn-qtd" data-qtd="20">
-                                    <i class="bi bi-person-fill me-1"></i>20
-                                </button>
                             </div>
                             <div class="text-center mt-3">
                                 <div class="alert alert-info mb-0 py-2 d-inline-block">
-                                    <small><i class="bi bi-info-circle me-1"></i>Os prêmios serão sorteados na ordem cadastrada</small>
+                                    <small><i class="bi bi-info-circle me-1"></i>Os prêmios serão sorteados na ordem
+                                        cadastrada</small>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +97,8 @@
                                 <span id="progressoTexto">0/5</span>
                             </div>
                             <div class="progress" style="height: 25px;">
-                                <div class="progress-bar bg-success" id="progressoBar" role="progressbar" style="width: 0%"></div>
+                                <div class="progress-bar bg-success" id="progressoBar" role="progressbar"
+                                    style="width: 0%"></div>
                             </div>
                         </div>
 
@@ -192,4 +192,5 @@
     <script src="js/auth.js"></script>
     <script src="js/sorteio.js"></script>
 </body>
+
 </html>

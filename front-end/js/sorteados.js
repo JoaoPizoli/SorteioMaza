@@ -1,4 +1,4 @@
-const API_URL = '/api';
+const API_URL = 'http://localhost:4001/api';
 
 // Elementos DOM
 const tabelaSorteados = document.getElementById('tabelaSorteados');
@@ -14,7 +14,7 @@ let sorteios = [];
 // ================================
 document.addEventListener('DOMContentLoaded', () => {
     carregarSorteados();
-    
+
     // Atualiza automaticamente a cada 30 segundos
     setInterval(carregarSorteados, 30000);
 });
@@ -26,7 +26,7 @@ async function carregarSorteados() {
     try {
         const response = await fetch(`${API_URL}/sorteios`);
         sorteios = await response.json();
-        
+
         atualizarEstatisticas();
         renderizarTabela();
     } catch (error) {
@@ -47,11 +47,11 @@ async function carregarSorteados() {
 // ================================
 function atualizarEstatisticas() {
     totalSorteados.textContent = sorteios.length;
-    
+
     // Conta apenas os prêmios efetivamente entregues
     const entregues = sorteios.filter(s => s.entregue).length;
     totalPremiosEntregues.textContent = entregues;
-    
+
     // Conta prêmios distintos
     const premiosUnicos = new Set(sorteios.map(s => s.premio?.id));
     premiosDistintos.textContent = premiosUnicos.size;
@@ -107,10 +107,10 @@ function limparPesquisa() {
 // ================================
 function renderizarTabela(filtro = '') {
     // Filtra os sorteios pelo nome do ganhador
-    const sorteiosFiltrados = filtro 
+    const sorteiosFiltrados = filtro
         ? sorteios.filter(s => s.ganhador?.nome?.toLowerCase().includes(filtro))
         : sorteios;
-    
+
     if (sorteiosFiltrados.length === 0) {
         tabelaSorteados.innerHTML = `
             <tr>
@@ -122,7 +122,7 @@ function renderizarTabela(filtro = '') {
         `;
         return;
     }
-    
+
     tabelaSorteados.innerHTML = sorteiosFiltrados.map((sorteio) => {
         // Encontra o índice original do sorteio
         const indiceOriginal = sorteios.findIndex(s => s.id === sorteio.id) + 1;
